@@ -1,0 +1,54 @@
+<html>
+<head>
+
+</head>
+
+<body>
+<style>
+	html,body { padding: 0px; margin: 0px; width: 100%; height: 100%;}
+	video {width: 500px; height: 300px; border: 1px solid black;}
+	.playerControls {width: 500px; height: 50px; border: 1px solid black;position: absolute; bottom: 0px;display: flex; flex-direction: row; display: none;background: #FFF;z-index: 2;}
+	.player {width: 500px; height: 300px; border: 1px solid black; position: relative; left:0px;top:0px;}
+	.playerVideo {width: 500px; height: 300px; border: 1px solid black; position: relative; }
+	.playerPlay {width: 50px; height: 50px; line-height: 50px; text-align:center; cursor: pointer; border-right: 1px solid black;}
+	.volume {width: 50px; height: 50px; line-height: 50px; text-align:center; cursor: pointer; border-right: 1px solid black; position: relative;}
+	.track {width: 350px; height: 50px; line-height: 50px; text-align:center; border-right: 1px solid black;}
+	.trackline {width: 97%; height: 5px;  cursor: pointer; border: 1px solid black; position: relative; top:22.5px;left: 1%;}
+	.playerTrackVolchok {width: 2px; height: 20px; background: black; position: absolute; top:-7.5px; left: 0px;}
+	.reklama {width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; z-index: 1; display: none;}
+	.reklama img {width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; z-index: 1;}
+	.reklama button {width: 30px; height: 30px; border: 1px solid black; border-radius: 13px; position: absolute; right: 0px; top: 0px; color:red; z-index: 2; cursor: pointer;}
+	.volumeBox {width: 100%; height: 100px; position: absolute; bottom: 50px; left: -1px; border: 1px solid #CCC; display: none;z-index:2;}
+	.volumeTrack {width: 5px; height: 90px; border: 1px solid #CCC; margin: 0px auto;position: relative; top:5px;}
+	.volumeTrackVolchok {width: 20px; height: 5px; background: #CCC; left: -7.5px; position: absolute;bottom: 1px; }
+	.screen { width: 50px; height: 50px; text-align: center; line-height: 50px; }
+</style>
+<div class="player">
+	<video class='playerVideo' src='1.mp4' ></video>
+	<div class="reklama">
+		<img src="1.jpg" >
+		<button onClick="document.querySelector('.reklama').style.display='none';">X</button>
+	</div>
+	<div class="playerControls">
+		<div class="playerPlay">></div>
+		<div class="volume"><span>+</span>
+			<div class="volumeBox">
+				<div class="volumeTrack">
+					<div class="volumeTrackVolchok"></div>
+				</div>
+			</div>
+		</div>
+		<div class="track" >
+			<div class="trackline"> 
+				<div class="playerTrackVolchok"></div>
+			</div>
+		</div>
+		<div class="screen">|_|</div>
+	</div>
+</div>
+ 
+<script src="./script.js" defer></script>
+<input type='range' style="width: 300px;">
+</body>
+
+</html>
