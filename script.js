@@ -20,6 +20,16 @@ class playerVideoModel{
 		this.element = new htmlModel('playerVideo');
 		this.play = false;
 		this.playInterval = '';
+		this.element.element.volume = 0.1;
+	}
+	
+	timeTrack(pTrack,point){
+
+		let perTime  = this.element.element.duration / 100;
+		let perWidth = pTrack.element.getWidth() / 100;
+		let percent  = parseFloat(point / perWidth);
+	
+		this.element.element.currentTime = perTime * percent;		
 	}
 }
 
@@ -96,7 +106,21 @@ class playerReklamaModel{
 	
 	constructor(nameClass){
 		this.element = new htmlModel(nameClass);
+		this.status = false;
+		this.timeOutId = false;
 	}
+	
+	append(cb){
+		if(!this.status){
+			let a = this;
+			this.timeOutId = setTimeout(function(){
+				a.status=true;
+				a.element.show();
+				return cb();
+			},5000);
+		}
+	}
+	
 }
 
 class htmlModel {
@@ -196,6 +220,14 @@ class playerTrackModel {
 	constructor(nameClass){
 		this.element = new htmlModel(nameClass);
 	}
+	
+	timeTrack(videoElement){
+		let perTime  = videoElement.duration / 100;
+		let perWidth = this.element.getWidth() / 100;
+		let percent  = parseFloat(videoElement.currentTime / perTime);
+		
+		return percent * perWidth;
+	}
 }
 
 let playerControls = new playerControlsModel('playerControls');
@@ -212,9 +244,15 @@ let playerScreen = new playerScreenModel('playerScreen');
 let playerPlay   = new playerPlayModel('playerPlay');
 let player       = new playerModel('player');
 
+let playerReklama = new playerReklamaModel('playerReklama');
+
 
 playerVideo.element.element.addEventListener('mouseover',function(e){
 	playerControls.element.show();
+});
+
+playerVideo.element.element.addEventListener('click',function(e){
+	playerPlay.element.element.click();
 });
 
 pVolume.element.element.addEventListener('mouseover',function(e){
@@ -226,24 +264,33 @@ pVolumeBox.element.element.addEventListener('mouseout',function(e){
 });
 
 playerPlay.element.element.addEventListener('click',function(e){
+	
 	if(playerPlay.getStatus()) {
+		
 		playerPlay.setStatus(false);
 		playerVideo.element.element.pause();
+		
+		if(!playerReklama.status){
+			
+			clearTimeout(playerReklama.timeOutId);
+		}
+
 		if(pTrackVolchok.interval){
+			
 			clearInterval(pTrackVolchok.interval);
 			pTrackVolchok.interval=false;
+			
 		}
 	} else {
+		playerReklama.append(()=>{
+			playerVideo.element.element.pause();
+			playerPlay.setStatus(false);
+		});	
 		playerPlay.setStatus(true);
 		playerVideo.element.element.play();
 		
-		let perTime  = playerVideo.element.element.duration / 100;
-		let perWidth = pTrack.element.getWidth() / 100;
-		
-		
 		pTrackVolchok.interval = setInterval(function(){
-		let percent  = parseFloat(playerVideo.element.element.currentTime / perTime);	
-			pTrackVolchok.element.left(percent * perWidth);
+			pTrackVolchok.element.left(pTrack.timeTrack(playerVideo.element.element));
 		},10);
 	}
 });
@@ -251,11 +298,9 @@ playerPlay.element.element.addEventListener('click',function(e){
 pTrack.element.element.addEventListener('click',function(mouse){
 	
 	pTrackVolchok.element.left(mouse.offsetX);
-	let perTime  = playerVideo.element.element.duration / 100;
-	let perWidth = pTrack.element.getWidth() / 100;
-	let percent  = parseFloat(mouse.offsetX / perWidth);
 	
-	playerVideo.element.element.currentTime = perTime * percent;
+	playerVideo.timeTrack(pTrack,mouse.offsetX);
+	
 });
 
 pVolumeTrack.element.element.addEventListener('click',function(mouse){
